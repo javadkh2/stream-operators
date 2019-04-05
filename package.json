@@ -1,0 +1,19 @@
+{
+  "name": "stream-helpers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev" : "tsc -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^3.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^11.13.0"
+  }
+}
