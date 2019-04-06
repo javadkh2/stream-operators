@@ -1,13 +1,13 @@
 import { Readable, Stream, Transform, TransformCallback, Writable } from "stream";
 
 // a helper for creating readStream 
-export const read = (readFn: (size: number, times: number) => Promise<any> | any) => {
+export const read = (readFn: (times: number, size: number) => Promise<any> | any) => {
     let times = -1;
     return new Readable({
         objectMode: true,
         read(size: number) {
             times++;
-            Promise.resolve(readFn(size, times))
+            Promise.resolve(readFn(times, size))
                 .then(data => this.push(data))
         }
     })
@@ -101,4 +101,7 @@ export const fork = (...children: Array<(stream: Stream) => void>) => {
 }
 
 // create an stream from a list
-export const from = (list: Array<any>) => read((size, times) => list.length > times ? list[times] : null)
+export const from = (list: Array<any>) => read((times) => list.length > times ? list[times] : null)
+
+// count from 0 to limit
+export const count = (limit: number = Infinity) => read((times) => times < limit ? times : null)

@@ -1,12 +1,10 @@
-import { delay, filter, fork, map, read, wait, write, inspect, reduce, from, list } from "./streamHelper";
-import { Stream } from "stream";
-import { createWriteStream } from "fs";
+import { read, wait, map, filter, delay, inspect, fork, write } from "./streamHelper";
 
 const getRandom = (max: number) => Math.floor(Math.random() * max);
 
-const getTestStream = (count: number, delay: number = 1) => read((size, times) => {
+const getTestStream = (count: number, delay: number = 1) => read((times) => {
     if (times > count) return null;
-    return wait(delay).then(() => ({ id: times, num: getRandom(10) + 1, size }))
+    return wait(delay).then(() => ({ id: times, num: getRandom(10) + 1 }))
 })
 
 getTestStream(10)
@@ -14,7 +12,7 @@ getTestStream(10)
     .pipe(filter((item) => item.id % 5 !== 0))
     .pipe(delay(1000))
     .pipe(map((item) => Promise.resolve({ ...item, asyncMap: getRandom(item.normalMap * item.num * 10) })))
-    .pipe(inspect())
+    // .pipe(inspect())
     // .pipe(reduce((res, item) => `${res ? `${res}-` : ''}[${item.id},${item.num},${item.num},${item.normalMap},${item.asyncMap}]`, ""))
     .pipe(fork(
         (stream) => stream
@@ -34,10 +32,3 @@ getTestStream(10)
 //         (stream) => stream.pipe(process.stdout),
 //         (stream) => stream.pipe(createWriteStream(`${__dirname}/output1.txt`)),
 //     ))
-
-
-// from([1, 2, 3, 4, 5])
-//     .pipe(inspect())
-//     .pipe(map(item => ({ [item]:item })))
-//     .pipe(list())
-//     .pipe(write((chunk) => console.log(chunk)));
