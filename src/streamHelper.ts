@@ -2,7 +2,7 @@ import { Readable, Stream, Transform, TransformCallback, Writable } from "stream
 
 // a helper for creating readStream 
 export const read = (readFn: (size: number, times: number) => Promise<any> | any) => {
-    let times = 0;
+    let times = -1;
     return new Readable({
         objectMode: true,
         read(size: number) {
@@ -28,7 +28,7 @@ export const write = (writeFn: (list: any) => Promise<any> | any) => new Writabl
 export const reduce = (reduce: (old: any, item: any) => Promise<any> | any, reset?: any | ((times: number) => any), bufferSize = Infinity) => {
     const getInitial = () => typeof reset === "function" ? reset(times) : reset;
     let counter = 0;
-    let times = 1;
+    let times = 0;
     let result = getInitial();
 
     const flush = (cb: TransformCallback) => {
@@ -86,8 +86,9 @@ export const inspect = (): any => map(log);
 export const delay = (time: number) => map((item) => wait(time).then(() => item));
 
 // reduce stream chunk to a list with special size
-export const list = (bufferSize: number) => reduce((list, item) => list.push(item) && list, () => [], bufferSize);
+export const list = (bufferSize: number = Infinity) => reduce((list, item) => list.push(item) && list, () => [], bufferSize);
 
+// fork stream to multiple stream
 export const fork = (...children: Array<(stream: Stream) => void>) => {
     let handlers = children.map((child) => {
         const stream = new Readable({ objectMode: true, read() { } });
@@ -97,5 +98,7 @@ export const fork = (...children: Array<(stream: Stream) => void>) => {
     return write((chunk) => {
         handlers.forEach((handler) => handler(chunk))
     })
-
 }
+
+// create an stream from a list
+export const from = (list: Array<any>) => read((size, times) => list.length > times ? list[times] : null)

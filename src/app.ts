@@ -1,4 +1,4 @@
-import { delay, filter, fork, map, read, wait, write, inspect, reduce } from "./streamHelper";
+import { delay, filter, fork, map, read, wait, write, inspect, reduce, from, list } from "./streamHelper";
 import { Stream } from "stream";
 import { createWriteStream } from "fs";
 
@@ -34,3 +34,10 @@ getTestStream(10)
 //         (stream) => stream.pipe(process.stdout),
 //         (stream) => stream.pipe(createWriteStream(`${__dirname}/output1.txt`)),
 //     ))
+
+
+// from([1, 2, 3, 4, 5])
+//     .pipe(inspect())
+//     .pipe(map(item => ({ [item]:item })))
+//     .pipe(list())
+//     .pipe(write((chunk) => console.log(chunk)));
