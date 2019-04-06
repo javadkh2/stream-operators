@@ -1,6 +1,8 @@
-import { Transform, TransformCallback, Writable, Readable } from "stream";
+import { Transform, TransformCallback, Writable, Readable, Stream, PassThrough } from "stream";
+import { rejects } from "assert";
 
-export const read = (readFn: (size: number, times: number) => any) => {
+// a helper for creating readStream 
+export const read = (readFn: (size: number, times: number) => Promise<any> | any) => {
     let times = 0;
     return new Readable({
         objectMode: true,
@@ -12,7 +14,8 @@ export const read = (readFn: (size: number, times: number) => any) => {
     })
 }
 
-export const write = (writeFn: (list: any) => any) => new Writable({
+// a helper for creating writeStream 
+export const write = (writeFn: (list: any) => Promise<any> | any) => new Writable({
     objectMode: true,
     write(list, enc, done) {
         Promise.resolve()
@@ -22,7 +25,8 @@ export const write = (writeFn: (list: any) => any) => new Writable({
     },
 });
 
-export const reduce = (reduce: (old: any, item: any) => any, reset?: any | ((times: number) => any), bufferSize = Infinity) => {
+// reduce stream data
+export const reduce = (reduce: (old: any, item: any) => Promise<any> | any, reset?: any | ((times: number) => any), bufferSize = Infinity) => {
     const getInitial = () => reset && typeof reset == "function" && reset(times)
     let counter = 0;
     let times = 1;
@@ -35,19 +39,22 @@ export const reduce = (reduce: (old: any, item: any) => any, reset?: any | ((tim
         result = getInitial();
     };
 
+    const setResult = (newRes: any) => result = newRes;
+
     return new Transform({
         objectMode: true,
         flush,
         transform(item, enc, cb) {
             Promise.resolve(counter++)
                 .then(() => reduce(result, item))
-                .then(ans => result = ans)
+                .then(setResult)
                 .then(() => counter < bufferSize ? cb() : flush(cb))
-                .catch(e => cb(e));
+                .catch(cb);
         },
     });
 };
 
+//stream map helper
 export const map = (map: (item: any) => any) => new Transform({
     objectMode: true,
     transform(item, enc, cb) {
@@ -57,6 +64,7 @@ export const map = (map: (item: any) => any) => new Transform({
     },
 });
 
+//stream filter helper
 export const filter = (filter: (item: any) => boolean) => new Transform({
     objectMode: true,
     transform(item, enc, cb) {
@@ -66,12 +74,29 @@ export const filter = (filter: (item: any) => boolean) => new Transform({
     },
 });
 
-export const after = (time: number) => new Promise((resolve, reject) => setTimeout(resolve, time))
+// return a promise that waiting for milliseconds and then resolve
+export const wait = (time: number) => new Promise((resolve, reject) => setTimeout(resolve, time))
 
+// log an argument an return it;
 export const log = (arg: any) => { console.log(arg); return arg; };
 
+// for debug purpose 
 export const inspect = (): any => map(log);
 
-export const delay = (time: number) => map((item) => after(time).then(() => item));
+// delay stream helper
+export const delay = (time: number) => map((item) => wait(time).then(() => item));
 
+// reduce stream chunk to a list with special size
 export const list = (bufferSize: number) => reduce((list, item) => list.push(item) && list, () => [], bufferSize);
+
+export const fork = (...children: Array<(stream: Stream) => void>) => {
+    let handlers = children.map((child) => {
+        const stream = new Readable({ objectMode: true, read() { } });
+        child(stream);
+        return (chunk: any) => stream.push(chunk)
+    })
+    return write((chunk) => {
+        handlers.forEach((handler) => handler(chunk))
+    })
+
+}
