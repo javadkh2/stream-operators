@@ -1,4 +1,6 @@
 import { delay, filter, fork, map, read, wait, write, inspect, reduce } from "./streamHelper";
+import { Stream } from "stream";
+import { createWriteStream } from "fs";
 
 const getRandom = (max: number) => Math.floor(Math.random() * max);
 
@@ -25,3 +27,10 @@ getTestStream(10)
             .pipe(write((chunk) => console.log(chunk))),
 
     ));
+
+// process.stdin
+//     .pipe(map((data) => data.toString().toUpperCase()))
+//     .pipe(fork(
+//         (stream) => stream.pipe(process.stdout),
+//         (stream) => stream.pipe(createWriteStream(`${__dirname}/output1.txt`)),
+//     ))

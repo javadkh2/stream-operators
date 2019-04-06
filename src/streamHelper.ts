@@ -1,5 +1,4 @@
-import { Transform, TransformCallback, Writable, Readable, Stream, PassThrough } from "stream";
-import { rejects } from "assert";
+import { Readable, Stream, Transform, TransformCallback, Writable } from "stream";
 
 // a helper for creating readStream 
 export const read = (readFn: (size: number, times: number) => Promise<any> | any) => {
@@ -27,7 +26,7 @@ export const write = (writeFn: (list: any) => Promise<any> | any) => new Writabl
 
 // reduce stream data
 export const reduce = (reduce: (old: any, item: any) => Promise<any> | any, reset?: any | ((times: number) => any), bufferSize = Infinity) => {
-    const getInitial = () => reset && typeof reset == "function" && reset(times)
+    const getInitial = () => typeof reset === "function" ? reset(times) : reset;
     let counter = 0;
     let times = 1;
     let result = getInitial();
