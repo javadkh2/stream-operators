@@ -88,20 +88,54 @@ export const delay = (time: number) => map((item) => wait(time).then(() => item)
 // reduce stream chunk to a list with special size
 export const list = (bufferSize: number = Infinity) => reduce((list, item) => list.push(item) && list, () => [], bufferSize);
 
-// fork stream to multiple stream
-export const fork = (...children: Array<(stream: Stream) => void>) => {
-    let handlers = children.map((child) => {
-        const stream = new Readable({ objectMode: true, read() { } });
-        child(stream);
-        return (chunk: any) => stream.push(chunk)
-    })
-    return write((chunk) => {
-        handlers.forEach((handler) => handler(chunk))
-    })
-}
-
 // create an stream from a list
 export const from = (list: Array<any>) => read((times) => list.length > times ? list[times] : null)
 
 // count from 0 to limit
 export const count = (limit: number = Infinity) => read((times) => times < limit ? times : null)
+
+// fork stream to multiple stream
+export const fork = (...children: Array<(stream: Stream) => void>) => {
+    let more: () => void;
+    let ready: boolean[] = new Array(children.length).fill(false);
+    const push = (chunk: any) => readers.forEach((stream, i) => {
+        stream.push(chunk);
+        ready[i] = false;
+    });
+    const writeStream = new Writable({
+        objectMode: true,
+        write(chunk, enc, cb) {
+            push(chunk);
+            more = () => cb();
+        }
+    })
+    writeStream
+        .on("finish", () => {
+            readers.forEach((stream) => {
+                stream.push(null);
+            })
+        })
+        .on("error", (err) => {
+            readers.forEach((stream) => {
+                stream.emit("error", err);
+            })
+        })
+
+    function checkReady() {
+        if (ready.reduce((result, current) => result && current)) {
+            more && more();
+        }
+    }
+    let readers = children.map((child, i) => {
+        const stream = new Readable({
+            objectMode: true, read() {
+                ready[i] = true;
+                checkReady();
+            }
+        });
+        child(stream);
+        return stream;
+    })
+    return writeStream;
+
+}
