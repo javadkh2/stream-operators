@@ -2,18 +2,22 @@
   "name": "stream-helpers",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc -w"
+    "test": "jest",
+    "build": "tsc"
+  },
+  "publishConfig": {
+    "registry": "http://192.168.54.68:9091/nexus/content/repositories/npm-internal/"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "typescript": "^3.4.1"
-  },
   "devDependencies": {
-    "@types/node": "^11.13.0"
+    "@types/jest": "^24.0.15",
+    "@types/node": "^11.13.0",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.4.1"
   }
 }
