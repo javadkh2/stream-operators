@@ -38,12 +38,11 @@ describe("Test `read` functionality", () => {
         const writeMock = jest.fn();
         const reader = (size: number) => read((times, bufferSize) => Promise.reject("error_message"));
         reader(5)
-            .pipe(write(writeMock))
             .on("error", (e) => {
-                console.log("errororor");
-                expect(writeMock.mock.calls.length).toEqual(1);
+                expect(writeMock.mock.calls.length).toEqual(0);
                 expect(e).toBe("error_message");
                 done()
             })
+            .pipe(write(writeMock))
     })
 })

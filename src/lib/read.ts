@@ -9,6 +9,7 @@ export const read = (readFn: (times: number, size: number) => Promise<any> | any
             times++;
             Promise.resolve(readFn(times, size))
                 .then(data => this.push(data))
+                .catch(error => { this.emit("error", error) })
         }
     })
 }
