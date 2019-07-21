@@ -1,5 +1,4 @@
-import { count, write } from "../src";
-import { concat } from "../src/lib/concat";
+import { count, write, concat } from "../src";
 
 describe("Test `concat` functionality", () => {
     it("should create concat each 3 chunks to a list chunk", (done) => {
@@ -8,7 +7,7 @@ describe("Test `concat` functionality", () => {
             .pipe(concat(3))
             .pipe(write(writeMock))
             .on("finish", () => {
-                expect(writeMock.mock.calls).toEqual([[[0,1,2]], [[3,4]]]);
+                expect(writeMock.mock.calls).toEqual([[[0, 1, 2]], [[3, 4]]]);
                 done()
             })
     })
@@ -19,7 +18,7 @@ describe("Test `concat` functionality", () => {
             .pipe(concat())
             .pipe(write(writeMock))
             .on("finish", () => {
-                expect(writeMock.mock.calls).toEqual([[[0,1,2,3,4]]]);
+                expect(writeMock.mock.calls).toEqual([[[0, 1, 2, 3, 4]]]);
                 done()
             })
     })
