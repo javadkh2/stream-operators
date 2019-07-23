@@ -6,6 +6,6 @@ export const filter = (filter: (item: any) => boolean) => new Transform({
     transform(item, enc, cb) {
         Promise.resolve(filter(item))
             .then(result => result ? cb(null, item) : cb())
-            .catch(e => cb(e));
+            .catch(cb)
     },
 });

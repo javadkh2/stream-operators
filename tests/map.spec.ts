@@ -11,4 +11,22 @@ describe("Test `map` functionality", () => {
                 done()
             })
     })
+    it("should fire error event if the map return expectation or Promise.reject", (done) => {
+        const writeMock = jest.fn();
+        const mapMock = jest.fn(() => Promise.reject("error_message"));
+        count(5)
+            .pipe(map(mapMock as any))
+            .on("error", (error) => {
+                expect(writeMock.mock.calls.length).toEqual(0);
+                expect(mapMock.mock.calls.length).toEqual(1);
+                expect(error).toBe("error_message");
+                done()
+            })
+            .pipe(write(writeMock))
+            .on("finish", () => {
+                expect(false).toBeTruthy();
+                done()
+            })
+
+    })
 })

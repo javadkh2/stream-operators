@@ -20,4 +20,19 @@ describe("Test `count` functionality", () => {
                 done()
             })
     })
+
+    it("should call write callback for each chunk", (done) => {
+        const writeMock = jest.fn(() => Promise.reject("error_message"));
+        count(5)
+            .pipe(write(writeMock))
+            .on("finish", () => {
+                expect(false).toBeTruthy(); // in case of error finish must not call
+                done()
+            })
+            .on("error", (error) => {
+                expect(writeMock.mock.calls.length).toEqual(1);
+                expect(error).toBe("error_message");
+                done()
+            })
+    })
 })

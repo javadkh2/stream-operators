@@ -7,6 +7,6 @@ export const write = (writeFn: (list: any) => Promise<any> | any) => new Writabl
         Promise.resolve()
             .then(() => writeFn(list))
             .then(() => done())
-            .catch((e) => this.emit("error", e));
+            .catch(done)
     },
 });

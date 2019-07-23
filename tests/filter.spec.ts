@@ -11,4 +11,23 @@ describe("Test `filter` functionality", () => {
                 done()
             })
     })
+
+    it("should fire error event if the filter return expectation or Promise.reject", (done) => {
+        const writeMock = jest.fn();
+        const FilterMock = jest.fn(() => Promise.reject("error_message"));
+        count(5)
+            .pipe(filter(FilterMock as any))
+            .on("error", (error) => {
+                expect(writeMock.mock.calls.length).toEqual(0);
+                expect(FilterMock.mock.calls.length).toEqual(1);
+                expect(error).toBe("error_message");
+                done()
+            })
+            .pipe(write(writeMock))
+            .on("finish", () => {
+                expect(false).toBeTruthy();
+                done()
+            })
+
+    })
 })

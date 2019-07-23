@@ -6,6 +6,6 @@ export const map = (map: (item: any) => any) => new Transform({
     transform(item, enc, cb) {
         Promise.resolve(map(item))
             .then(result => cb(null, result))
-            .catch(e => cb(e));
+            .catch(cb)
     },
 });
