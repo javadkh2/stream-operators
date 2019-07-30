@@ -1,10 +1,10 @@
-import { count, write, fork, filter, delay, reduce, inspect } from "../src";
+import { counter, write, fork, filter, delay, reduce, inspect } from "../src";
 
 describe("Test `count` functionality", () => {
     it("should fork stream and each fork handle different task", (done) => {
         const writeForkOneMock = jest.fn();
         const writeForkTwoMock = jest.fn();
-        count(5)
+        counter(5)
             .pipe(fork(
                 (stream) => stream
                     .pipe(filter((item) => item % 2 === 0))

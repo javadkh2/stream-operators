@@ -1,4 +1,4 @@
-import { count, write, read, wait } from "../src";
+import { counter, write, read, wait } from "../src";
 
 describe("Test `read` functionality", () => {
     it("should create a readStream with 5 items (0,1,2,3,4)", (done) => {
