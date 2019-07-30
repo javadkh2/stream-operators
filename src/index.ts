@@ -10,5 +10,8 @@ export { read } from "./lib/read";
 export { reduce } from "./lib/reduce";
 export { log, wait } from "./lib/utils";
 export { write } from "./lib/write";
+export { startWith } from "./lib/startWith";
+export { endWith } from "./lib/endWith";
+export { extract } from "./lib/extract";
 
 
