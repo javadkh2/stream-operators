@@ -1,9 +1,9 @@
-import { count, startWith, write, endWith } from "../src";
+import { counter, startWith, write, endWith } from "../src";
 
 describe("Test `startWith` functionality", () => {
     it("should add -10 as first chunk", (done) => {
         const writeMock = jest.fn();
-        count(5)
+        counter(5)
             .pipe(startWith(-10))
             .pipe(write(writeMock))
             .on("finish", () => {

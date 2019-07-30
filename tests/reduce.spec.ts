@@ -1,9 +1,9 @@
-import { count, write, reduce } from "../src";
+import { counter, write, reduce } from "../src";
 
 describe("Test `reduce` functionality", () => {
     it("should create a chunk with sum of all chunks", (done) => {
         const writeMock = jest.fn();
-        count(5)
+        counter(5)
             .pipe(reduce((result, item) => result + item, 0))
             .pipe(write(writeMock))
             .on("finish", () => {
@@ -14,7 +14,7 @@ describe("Test `reduce` functionality", () => {
 
     it("should create two chunk with sum of chunks with size 3", (done) => {
         const writeMock = jest.fn();
-        count(6)
+        counter(6)
             .pipe(reduce((result, item) => result + item, () => 0, 3))
             .pipe(write(writeMock))
             .on("finish", () => {
@@ -26,7 +26,7 @@ describe("Test `reduce` functionality", () => {
     it("should fire error event in case of error od exception", (done) => {
         const writeMock = jest.fn();
         const FilterMock = jest.fn(() => Promise.reject("error_message"));
-        count(5)
+        counter(5)
             .pipe(reduce(FilterMock as any))
             .on("error", (error) => {
                 expect(writeMock.mock.calls.length).toEqual(0);

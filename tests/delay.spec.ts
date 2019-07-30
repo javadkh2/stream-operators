@@ -1,4 +1,4 @@
-import { count, write, delay } from "../src";
+import { counter, write, delay } from "../src";
 
 describe("Test `delay` functionality", () => {
     it("should make delay in stream data without changing the data", (done) => {
@@ -6,7 +6,7 @@ describe("Test `delay` functionality", () => {
         const times: number[] = []
         const wait = 100 //ms
         const writeMock = jest.fn(() => times.push(Date.now()));
-        count(5)
+        counter(5)
             .pipe(delay(wait))
             .pipe(write(writeMock))
             .on("finish", () => {

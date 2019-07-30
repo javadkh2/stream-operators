@@ -1,4 +1,4 @@
-import { count, write, map, from } from "../src";
+import { counter, write, map, from } from "../src";
 import { extract } from "../src/lib/extract";
 
 describe("Test `extract` functionality", () => {

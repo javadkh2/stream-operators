@@ -1,10 +1,10 @@
-import { count, write } from "../src";
+import { counter, write } from "../src";
 
 describe("Test `count` functionality", () => {
 
     it("should fire finish event id stream in finishing and callback must called 5 times", (done) => {
         const writeMock = jest.fn();
-        count(5)
+        counter(5)
             .pipe(write(writeMock))
             .on("finish", () => {
                 expect(writeMock.mock.calls.length).toEqual(5);
@@ -13,7 +13,7 @@ describe("Test `count` functionality", () => {
     })
     it("should call write callback for each chunk", (done) => {
         const writeMock = jest.fn();
-        count(5)
+        counter(5)
             .pipe(write(writeMock))
             .on("finish", () => {
                 expect(writeMock.mock.calls).toEqual([[0], [1], [2], [3], [4]]);
@@ -23,7 +23,7 @@ describe("Test `count` functionality", () => {
 
     it("should call write callback for each chunk", (done) => {
         const writeMock = jest.fn(() => Promise.reject("error_message"));
-        count(5)
+        counter(5)
             .pipe(write(writeMock))
             .on("finish", () => {
                 expect(false).toBeTruthy(); // in case of error finish must not call

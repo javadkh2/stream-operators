@@ -1,9 +1,9 @@
-import { count, write, map } from "../src";
+import { counter, write, map } from "../src";
 
 describe("Test `map` functionality", () => {
     it("should map numbers to duplicate in the stream data", (done) => {
         const writeMock = jest.fn();
-        count(5)
+        counter(5)
             .pipe(map((item) => item * 2))
             .pipe(write(writeMock))
             .on("finish", () => {
@@ -14,7 +14,7 @@ describe("Test `map` functionality", () => {
     it("should fire error event if the map return expectation or Promise.reject", (done) => {
         const writeMock = jest.fn();
         const mapMock = jest.fn(() => Promise.reject("error_message"));
-        count(5)
+        counter(5)
             .pipe(map(mapMock as any))
             .on("error", (error) => {
                 expect(writeMock.mock.calls.length).toEqual(0);
