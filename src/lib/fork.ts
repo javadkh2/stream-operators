@@ -1,46 +1,59 @@
 import { Readable, Stream, Writable } from "stream";
 
 // fork stream to multiple stream
-export const fork = (...children: Array<(stream: Stream) => void>) => {
+export const fork = (...children: Array<(stream: Stream) => Writable>) => {
     let more: () => void;
-    let ready: boolean[] = new Array(children.length).fill(false);
-    const push = (chunk: any) => readers.forEach((stream, i) => {
-        stream.push(chunk);
-        ready[i] = false;
+    const push = (chunk: any) => readers.forEach((reader, i) => {
+        reader.stream.push(chunk);
+        reader.ready = false;
     });
+    const finish = (total: number, cb: () => void) => {
+        let finished = 0;
+        return () => {
+            finished++;
+            if (finished === total) {
+                cb();
+            }
+        }
+    }
     const writeStream = new Writable({
         objectMode: true,
+        final(cb) {
+            const finishFn = finish(readers.length, cb);
+            readers.forEach((reader) => {
+                if (reader.wStream && reader.wStream instanceof Writable) {
+                    reader.wStream.on("finish", finishFn)
+                    reader.stream.push(null);
+                } else {
+                    reader.stream.push(null);
+                    finishFn();
+                }
+            })
+        },
         write(chunk, enc, cb) {
             push(chunk);
             more = () => cb();
         }
     })
-    writeStream
-        .on("finish", () => {
-            readers.forEach((stream) => {
-                stream.push(null);
-            })
-        })
-        .on("error", (err) => {
-            readers.forEach((stream) => {
-                stream.emit("error", err);
-            })
-        })
 
     function checkReady() {
-        if (ready.reduce((result, current) => result && current)) {
+        if (readers.reduce((result, reader) => result && reader.ready, true)) {
             more && more();
         }
     }
-    let readers = children.map((child, i) => {
+    let readers = children.map((child) => {
         const stream = new Readable({
             objectMode: true, read() {
-                ready[i] = true;
+                reader.ready = true;
                 checkReady();
             }
         });
-        child(stream);
-        return stream;
+        const reader = {
+            ready: false,
+            stream,
+            wStream: child(stream),
+        }
+        return reader;
     })
     return writeStream;
 
