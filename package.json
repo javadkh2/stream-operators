@@ -1,7 +1,7 @@
 {
   "name": "stream-operators",
   "version": "1.0.0",
-  "description": "",
+  "description": "A library for creating Readable, Writable and Transform stream which adopt two major tools in async world - Stream and Promise - with declarative programming approach.",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
@@ -9,8 +9,8 @@
     "build": "tsc"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Javad Khalilian <khalilian.javad@gmail.com>",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^24.0.15",
     "@types/node": "^11.13.0",
