@@ -7,7 +7,7 @@ Node.js native stream is very powerfully tool for creating high performance appl
 [pull-request-image]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
 [pull-request-url]: #
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg
-[license-url]: https://github.com/javaskh2/stream-operators/blob/master/LICENSE
+[license-url]: https://github.com/javadkh2/stream-operators/blob/master/LICENSE
 [npm-image]: https://img.shields.io/npm/v/stream-operators.svg?style=flat
 [npm-url]: https://npmjs.org/package/stream-operators
 [typescript-image]: https://img.shields.io/npm/types/typescript
