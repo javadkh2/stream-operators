@@ -1,7 +1,7 @@
 import { Readable, Stream, Writable } from "stream";
 
 // fork stream to multiple stream
-export const fork = (...children: Array<(stream: Stream) => Writable>) => {
+export const fork = (...branches: Array<(stream: Stream) => void | Writable>) => {
     let more: () => void;
     const push = (chunk: any) => readers.forEach((reader, i) => {
         reader.stream.push(chunk);
@@ -41,7 +41,7 @@ export const fork = (...children: Array<(stream: Stream) => Writable>) => {
             more && more();
         }
     }
-    let readers = children.map((child) => {
+    let readers = branches.map((child) => {
         const stream = new Readable({
             objectMode: true, read() {
                 reader.ready = true;

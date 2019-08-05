@@ -1,7 +1,7 @@
 import { Writable } from "stream";
 
 // a helper for creating writeStream 
-export const write = (writeFn: (list: any) => Promise<any> | any) => new Writable({
+export const write = (writeFn: (chunk: any) => Promise<any> | any) => new Writable({
     objectMode: true,
     write(list, enc, done) {
         Promise.resolve()

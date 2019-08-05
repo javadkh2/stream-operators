@@ -12,4 +12,15 @@ describe("Test `extract` functionality", () => {
                 done()
             })
     })
+
+    it("should return same chunk if the chunk is not an array", (done) => {
+        const writeMock = jest.fn();
+        from([1,[2,3]])
+            .pipe(extract())
+            .pipe(write(writeMock))
+            .on("finish", () => {
+                expect(writeMock.mock.calls).toEqual([[1], [2], [3]]);
+                done()
+            })
+    })
 })

@@ -1,7 +1,7 @@
 import { Transform, TransformCallback } from "stream";
 
 // reduce stream data
-export const reduce = (reduce: (old: any, item: any) => Promise<any> | any, reset?: any | ((times: number) => any), bufferSize = Infinity) => {
+export const reduce = (reducer: (acc: any, item: any) => Promise<any> | any, reset?: any | ((times: number) => any), bufferSize = Infinity) => {
     const getInitial = () => typeof reset === "function" ? reset(times) : reset;
     let counter = 0;
     let times = 0;
@@ -21,7 +21,7 @@ export const reduce = (reduce: (old: any, item: any) => Promise<any> | any, rese
         flush,
         transform(item, enc, cb) {
             Promise.resolve(counter++)
-                .then(() => reduce(result, item))
+                .then(() => reducer(result, item))
                 .then(setResult)
                 .then(() => counter < bufferSize ? cb() : flush(cb))
                 .catch(cb);

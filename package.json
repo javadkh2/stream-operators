@@ -1,5 +1,5 @@
 {
-  "name": "stream-helpers",
+  "name": "stream-operators",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -7,9 +7,6 @@
     "test": "jest",
     "test-coverage": "jest --coverage",
     "build": "tsc"
-  },
-  "publishConfig": {
-    "registry": "http://192.168.54.68:9091/nexus/content/repositories/npm-internal/"
   },
   "keywords": [],
   "author": "",
