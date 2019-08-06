@@ -1,6 +1,6 @@
 {
   "name": "stream-operators",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A library for creating Readable, Writable and Transform stream which adopt two major tools in async world - Stream and Promise - with declarative programming approach.",
   "main": "dist/index.js",
   "homepage": "https://github.com/javadkh2/stream-operators",
@@ -16,10 +16,20 @@
   "keywords": [
     "Stream",
     "Promise",
+    "read",
+    "write",
     "map",
     "filter",
     "reduce",
-    "fork"
+    "fork",
+    "buffer",
+    "counter",
+    "delay",
+    "endWith",
+    "startWith",
+    "extract",
+    "from",
+    "inspect"
   ],
   "author": "Javad Khalilian <khalilian.javad@gmail.com>",
   "license": "MIT",
