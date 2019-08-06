@@ -29,6 +29,8 @@ Creates a read stream that start a counter from zero to limit - the limit defaul
 
 ##### sample
 ```typescript
+const { counter } = require("stream-operators");
+
 counter(5)
     .pipe(process.stdout)
 
@@ -44,7 +46,9 @@ Creates a read stream from a list and push items in sequence.
  
 #### sample
 ```typescript
-from([1,2,3,4])
+const { from } = require("stream-operators");
+
+from([1, 2, 3, 4])
     .pipe(process.stdout)
 
 // console: 1 2 3 4 
