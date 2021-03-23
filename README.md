@@ -1,8 +1,8 @@
 # stream-operators [![npm][npm-image]][npm-url] [![GitHub license][license-image]][license-url]  [![type][typescript-image]][npm-url] [![PRs Welcome][pull-request-image]][pull-request-url]
 
-A library for creating Readable, Writable and Transform stream which adopt two major tools in async world -  Stream and Promise - with declarative programming approach.
+A library for creating Readable, Writable and Transform stream which adopt Stream and Promise with declarative programming approach.
 
-Node.js native stream is very powerfully tool for creating high performance application. This library designed for using the power of stream for read, transform and write streams in object mode. the API is very declarative and inspired by RxJs. another design decision is combining streams with promise for better async handling; Most of the helpers could return promise instead of absolute data.
+Node.js native stream is very powerfully tool for creating high performance application. This library designed to use the power of stream for read, transform and write streams in object mode. the API is very declarative and inspired by RxJs. another design decision is combining streams with promise for better async handling; Most of the helpers could return promise instead of absolute data.
 
 [pull-request-image]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
 [pull-request-url]: #
@@ -25,7 +25,7 @@ $ npm install stream-operators
 counter: (limit: number = Infinity) => Readable
 ```
 
-Creates a read stream that start a counter from zero to limit - the limit default value is Infinity.
+Creates a read stream that starts a counter from zero to limit - the limit default value is Infinity.
 
 ##### sample
 ```typescript
@@ -42,7 +42,7 @@ counter(5)
 ```typescript
 from: (list: any[]) => Readable
 ```
-Creates a read stream from a list and push items in sequence.
+Creates a read stream from a list and pushs items in sequence.
  
 #### sample
 ```typescript
@@ -60,7 +60,7 @@ from([1, 2, 3, 4])
 read: (readFn: (times: number, size: number) => any) => Readable
 ```
 
-Creates a read stream from a read function, each time consumer send a read signal the reader function is called and the return value push to the stream. The return value could be a promise and in this case the resolved value push to the stream.
+Creates a read stream from a read function, each time a consumer sends a read signal the reader function gets called and the return value get pushed to the stream. The return value could be a promise and in this case the resolved value get pushed to the stream.
 
 ##### sample
 ```typescript
